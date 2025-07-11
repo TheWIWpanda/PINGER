@@ -1,0 +1,23 @@
+name: Monitor Webhook
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # runs every 5 minutes
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install discord.py requests
+      - name: Run script
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
+          PING_WEBHOOK_URL: ${{ secrets.PING_WEBHOOK_URL }}
+        run: python check_webhook.py
